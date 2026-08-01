@@ -1,44 +1,56 @@
 package com.softserve.academy.model;
 
 import com.softserve.academy.exception.NotDeliverableException;
+import lombok.Getter;
 
+@Getter
 public class PushNotification extends Notification {
-    private String deviceToken;
-    private String iconUrl;
+    private final String deviceToken;
+    private final String iconUrl;
 
     public PushNotification(String recipient, String message, int priority, String deviceToken, String iconUrl) {
         super(recipient, message, priority);
-        // TODO: Ініціалізація додаткових полів
+        this.deviceToken = deviceToken;
+        this.iconUrl = iconUrl;
     }
 
     @Override
     public boolean isDeliverable() {
-        // TODO: deviceToken не blank і довжина > 10
-        return false;
+        return !(getDeviceToken() == null) && !getDeviceToken().isBlank() && getDeviceToken().length() > 10;
     }
 
     public boolean isSilent() {
-        // TODO: true якщо message порожнє (тільки тайтл)
-        return false;
+        return getMessage() != null && getMessage().isBlank();
     }
 
     @Override
     public String getFormattedMessage() {
-        // TODO: 🔔 {message} (якщо silent -> 🔔 (silent))
-        return null;
+        if (isSilent()) {
+            return "🔔 (silent)";
+        } else {
+            return "🔔 " + getMessage();
+        }
     }
 
     @Override
     public int estimateDeliverySeconds() {
-        // TODO: 1
-        return 0;
+        return 1;
     }
 
     @Override
-    protected void performSend() {
-        // TODO: Симуляція відправки (println)
+    protected void performSend() throws NotDeliverableException {
+        if (isDeliverable()) {
+            System.out.println("To: " + getRecipient());
+            System.out.println(getFormattedMessage());
+            System.out.println("With icon: " + getIconUrl());
+            System.out.println("With token: " + maskSensitiveInfo(getDeviceToken()));
+            System.out.println("Priority: " + getPriority() + " " + (isHighPriority() ? "is high." : "is low"));
+            System.out.printf("Message will be sent in %d seconds.", estimateDeliverySeconds());
+            System.out.println("Status: " + getStatus() + "\n");
+        }
     }
 
-    public String getDeviceToken() { return deviceToken; }
-    public String getIconUrl() { return iconUrl; }
+    private String maskSensitiveInfo(String token) {
+        return token.toLowerCase().contains("token") ? "***" : token;
+    }
 }
