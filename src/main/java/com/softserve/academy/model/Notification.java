@@ -53,7 +53,6 @@ public abstract class Notification implements Comparable<Notification> {
 
     @Override
     public int compareTo(Notification other) {
-        // TODO: Сортування за priority descending
         return Integer.compare(other.priority, this.priority);
     }
 }

@@ -50,7 +50,7 @@ public class EmailNotification extends Notification {
     @Override
     protected void performSend() throws NotDeliverableException {
         if (isSpam()) {
-            throw new NotDeliverableException("This massage is a spam!");
+            throw new NotDeliverableException("This message is a spam!");
         }
         if (isDeliverable()) {
             System.out.println("Send from: " + getSenderEmail());
@@ -59,8 +59,10 @@ public class EmailNotification extends Notification {
             System.out.println(getFormattedMessage());
             String attachment = hasAttachment ? "Yes" : "No";
             System.out.println("Is there any attachment? " + attachment);
-            System.out.printf("Message will be delivered in %d seconds.", estimateDeliverySeconds());
+            System.out.printf("Message will be delivered in %d seconds.\n", estimateDeliverySeconds());
             System.out.println("Status: " + getStatus() + "\n");
+        } else {
+            throw new NotDeliverableException("Email address is not valid!");
         }
     }
 }

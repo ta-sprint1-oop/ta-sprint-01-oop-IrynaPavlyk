@@ -29,10 +29,11 @@ public class SmsNotification extends Notification {
 
     @Override
     public String getFormattedMessage() {
+        String message = getMessage();
         if (isOverLimit()) {
-            setMessage(getMessage().substring(0, 160));
+            return message.substring(0, 160);
         }
-        return getMessage();
+        return message;
     }
 
     @Override
@@ -48,8 +49,10 @@ public class SmsNotification extends Notification {
             System.out.println(getFormattedMessage());
             System.out.println("Has flash? " + isFlash());
             System.out.println("Priority: " + getPriority() + " " + (isHighPriority() ? "is high." : "is low"));
-            System.out.printf("Message will be sent in %d seconds.", estimateDeliverySeconds());
+            System.out.printf("Message will be sent in %d seconds.\n", estimateDeliverySeconds());
             System.out.println("Status: " + getStatus() + "\n");
-        }
+        } else {
+        throw new NotDeliverableException("SMS is not deliverable!");
+    }
     }
 }

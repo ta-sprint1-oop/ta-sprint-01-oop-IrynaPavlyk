@@ -45,9 +45,11 @@ public class PushNotification extends Notification {
             System.out.println("With icon: " + getIconUrl());
             System.out.println("With token: " + maskSensitiveInfo(getDeviceToken()));
             System.out.println("Priority: " + getPriority() + " " + (isHighPriority() ? "is high." : "is low"));
-            System.out.printf("Message will be sent in %d seconds.", estimateDeliverySeconds());
+            System.out.printf("Message will be sent in %d seconds.\n", estimateDeliverySeconds());
             System.out.println("Status: " + getStatus() + "\n");
-        }
+        } else {
+        throw new NotDeliverableException("Push notification is not deliverable!");
+    }
     }
 
     private String maskSensitiveInfo(String token) {
